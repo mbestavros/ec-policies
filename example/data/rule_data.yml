@@ -92,3 +92,6 @@ rule_data:
     format: semverv
     min: v50.20.2
     max: v50.28.3
+
+  # effective_on
+  effective_on: "2024-01-01T00:00:00Z"

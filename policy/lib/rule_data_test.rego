@@ -25,6 +25,28 @@ test_rule_data if {
 		with lib.rule_data_defaults as {"key3": 10}
 }
 
+test_rule_data_effective_on if {
+	lib.assert_equal(
+		[
+			40, # key0 value comes from data.rule_data__configuration__
+			30, # key1 value comes from data.rule_data_custom
+			20, # key2 value comes from data.rule_data
+			[], # key3 value comes from lib.rule_data_defaults, but is not yet effective
+			[], # key4 value is not defined
+		],
+		[
+			lib.rule_data("key0"),
+			lib.rule_data("key1"),
+			lib.rule_data("key2"),
+			lib.rule_data("key3"),
+			lib.rule_data("key4"),
+		],
+	) with data.rule_data__configuration__ as {"key0": 40}
+		with data.rule_data_custom as {"key0": 30, "key1": 30}
+		with data.rule_data as {"key0": 20, "key1": 20, "key2": 20, "effective_on": "2024-01-01T00:00:00Z"}
+		with lib.rule_data_defaults as {"key3": 10, "effective_on": "9999-01-01T00:00:00Z"}
+}
+
 # Need this for 100% coverage
 test_rule_data_defaults if {
 	lib.assert_not_empty(lib.rule_data_defaults)
